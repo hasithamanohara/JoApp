@@ -3,6 +3,10 @@ allprojects {
         google()
         mavenCentral()
     }
+
+    buildscript {
+    ext.kotlin_version = '1.7.10'
+}
 }
 
 rootProject.buildDir = "../build"

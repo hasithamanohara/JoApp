@@ -5,7 +5,7 @@ import '../services/auth/auth_provider.dart';
 
 class SplashScreenController {
   Future<void> checkAuthStatus(BuildContext context) async {
-    await Future.delayed(const Duration(seconds: 100));
+    await Future.delayed(const Duration(seconds: 3));
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     if (authProvider.isAuthenticated) {
