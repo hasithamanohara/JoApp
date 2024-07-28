@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../provider/auth_provider.dart';
 import '../routes/app_routes.dart';
-import '../services/auth/auth_service.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -27,9 +28,8 @@ class _AuthScreenState extends State<AuthScreen> {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
       try {
-        // Implement your login logic here
-        await AuthService.login(
-            _emailController.text, _passwordController.text);
+        await Provider.of<AuthProvider>(context, listen: false)
+            .login(_emailController.text, _passwordController.text);
         Navigator.of(context).pushReplacementNamed(AppRoutes.home);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(

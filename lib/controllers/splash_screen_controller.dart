@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../provider/auth_provider.dart';
 import '../routes/app_routes.dart';
-import '../services/auth/auth_provider.dart';
 
 class SplashScreenController {
   Future<void> checkAuthStatus(BuildContext context) async {
