@@ -14,13 +14,13 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(),
+    return const Scaffold(
+      appBar: CustomAppBar(),
       body: Column(
         children: [
           Expanded(child: MapView()),
-          const TripTypeSelector(),
-          const LocationInput(),
+          TripTypeSelector(),
+          LocationInput(),
         ],
       ),
     );

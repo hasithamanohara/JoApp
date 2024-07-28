@@ -1,40 +1,34 @@
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
+import '../utils/api_calling/get_place.dart';
 
 class LocationProvider with ChangeNotifier {
   Position? _currentPosition;
+  Position? cabPosition;
+  Position? dropPosition;
   String _errorMessage = '';
-  bool _isLoading = false;
 
   Position? get currentPosition => _currentPosition;
   String get errorMessage => _errorMessage;
-  bool get isLoading => _isLoading;
+  double? get latitude => _currentPosition?.latitude;
+  double? get longitude => _currentPosition?.longitude;
 
   Future<bool> _handlePermission() async {
-    bool serviceEnabled;
-    LocationPermission permission;
+    var status = await Permission.location.status;
+    if (status.isDenied || status.isRestricted) {
+      status = await Permission.location.request();
+    }
 
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      _errorMessage =
-          'Location services are disabled. Please enable the services';
+    if (status.isDenied) {
+      _errorMessage = 'Location permissions are denied';
       notifyListeners();
       return false;
     }
 
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        _errorMessage = 'Location permissions are denied';
-        notifyListeners();
-        return false;
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
+    if (status.isPermanentlyDenied) {
       _errorMessage =
-          'Location permissions are permanently denied, we cannot request permissions.';
+          'Location permissions are permanently denied. Please enable them in settings.';
       notifyListeners();
       return false;
     }
@@ -43,14 +37,9 @@ class LocationProvider with ChangeNotifier {
   }
 
   Future<void> getCurrentLocation() async {
-    _isLoading = true;
     notifyListeners();
-
     final hasPermission = await _handlePermission();
-
     if (!hasPermission) {
-      _isLoading = false;
-      notifyListeners();
       return;
     }
 
@@ -61,7 +50,40 @@ class LocationProvider with ChangeNotifier {
       _errorMessage = 'Error getting location: $e';
     }
 
-    _isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> getDropingLocation(String placeName) async {
+    notifyListeners();
+    final hasPermission = await _handlePermission();
+    if (!hasPermission) {
+      return;
+    }
+
+    try {
+      final location =
+          await LocationService().fetchLocationCoordinates(placeName);
+      if (location != null) {
+        _currentPosition = Position(
+          latitude: location.latitude,
+          longitude: location.longitude,
+          timestamp: DateTime.now(),
+          accuracy: 0,
+          altitude: 0,
+          heading: 0,
+          speed: 0,
+          speedAccuracy: 0,
+          altitudeAccuracy: 0,
+          headingAccuracy: 0,
+        );
+        _errorMessage = '';
+      } else {
+        _errorMessage = 'Location not found';
+      }
+    } catch (e) {
+      _errorMessage = 'Error getting location: $e';
+    }
+
     notifyListeners();
   }
 }

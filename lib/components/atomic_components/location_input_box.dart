@@ -5,13 +5,15 @@ class LocationInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController pickUpPointController = TextEditingController();
+    TextEditingController dropPointController = TextEditingController();
     return Container(
       padding: const EdgeInsets.all(16),
       child: const Column(
         children: [
           TextField(
             decoration: InputDecoration(
-              labelText: 'PICKUP',
+              labelText: 'Your Location To',
               hintText: 'Location fetched',
             ),
           ),
