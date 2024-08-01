@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import '../../provider/location_provider.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class MapView extends StatefulWidget {
   const MapView({super.key});
@@ -15,10 +16,15 @@ class _MapViewState extends State<MapView> {
   GoogleMapController? _mapController;
   bool _isLoading = true;
 
+  late String _mapStyle;
+
   @override
   void initState() {
     super.initState();
     _initializeLocation();
+    rootBundle.loadString('assets/map_style/map_style.txt').then((string) {
+      _mapStyle = string;
+    });
   }
 
   Future<void> _initializeLocation() async {
@@ -52,6 +58,7 @@ class _MapViewState extends State<MapView> {
         }
 
         return GoogleMap(
+          zoomControlsEnabled: false,
           initialCameraPosition: CameraPosition(
             target: LatLng(userLatitude, userLongitude),
             zoom: 15,
@@ -66,6 +73,7 @@ class _MapViewState extends State<MapView> {
           },
           onMapCreated: (GoogleMapController controller) {
             _mapController = controller;
+            _mapController?.setMapStyle(_mapStyle);
             print(
                 'Map created with API key: ${dotenv.env['GOOGLE_MAPS_API_KEY']}');
           },
