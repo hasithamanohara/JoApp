@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "255307572645",
+    "project_id": "joapp-afb5b",
+    "storage_bucket": "joapp-afb5b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:255307572645:android:a8320907584d6c78b4b44c",
+        "android_client_info": {
+          "package_name": "com.example.joapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0iiUXHjyNl7X6sR5yV8gPBh3rjwcqaPI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
